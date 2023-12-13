@@ -1,0 +1,19 @@
+---
+- hosts: linux
+  become: yes
+  tasks:
+    - name: create user
+      user:
+        name: "{{ansible_user}}" # same user as control node
+        uid: 10001 # same UID as control node
+
+    - name: copy ansible-user config to sudoers
+      copy:
+        src: ./sudoers
+        dest: /etc/sudoers.d/
+
+    - name: copy ssh keys
+      authorized_key:
+        user: "{{ansible_user}}"
+        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}" # public key of the user created on control node
+        state: present

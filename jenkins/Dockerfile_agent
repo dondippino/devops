@@ -1,0 +1,5 @@
+FROM node:current-alpine3.17 AS node_image
+EXPOSE 8999
+
+FROM jenkins/agent
+COPY --from=node_image /usr/local/bin/node /usr/local/bin/node
